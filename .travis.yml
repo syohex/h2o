@@ -1,7 +1,7 @@
 matrix:
   include:
-    - os: linux
-      compiler: gcc
+    # - os: linux
+    # - compiler: gcc
     - os: osx
       osx_image: xcode7.3
       compiler: clang
@@ -18,7 +18,7 @@ before_install:
   - which openssl
   - openssl version
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl -L https://www.openssl.org/source/openssl-1.0.2h.tar.gz | tar xzf -; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd openssl-1.0.2h && ./Configure darwin64-x86_64-cc --prefix=/usr/local --openssldir=/usr/local/openssl && make && sudo make install; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd openssl-1.0.2h && ./Configure darwin64-x86_64-cc --prefix=/usr/local --openssldir=/usr/local/openssl && make && sudo make install); fi
   - which openssl
   - openssl version
 
