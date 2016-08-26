@@ -828,6 +828,8 @@ static void on_handshake_complete(h2o_socket_t *sock, const char *err)
         }
     }
 
+    SSL_SESSION *sess = SSL_get_session(sock->ssl->ssl);
+
     h2o_socket_cb handshake_cb = sock->ssl->handshake.cb;
     sock->_cb.write = NULL;
     sock->ssl->handshake.cb = NULL;

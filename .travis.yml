@@ -29,7 +29,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl -L http://zlib.net/zlib-1.2.8.tar.gz | tar xzf -; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd zlib-1.2.8 && ./configure --prefix=/usr/local && make && sudo make install); fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install --quiet cpanminus zlib; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install --quiet cpanminus; fi
 
 before_script:
   # install libuv >= 1.0.0 (optionally required for building / testing libh2o)
