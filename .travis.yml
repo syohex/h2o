@@ -25,7 +25,9 @@ before_install:
   # for speed, pre-install deps installed in `before_script` section as ubuntu packages
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq cpanminus libipc-signal-perl liblist-moreutils-perl libwww-perl libio-socket-ssl-perl zlib1g-dev; fi
   # - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew tap homebrew/versions; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then xcode-select --install; fi
+
+  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl -L http://zlib.net/zlib-1.2.8.tar.gz | tar xzf -; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd zlib-1.2.8 && ./configure --prefix=/usr/local && make && sudo make install); fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install --quiet cpanminus zlib; fi
 
