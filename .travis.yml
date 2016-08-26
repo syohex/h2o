@@ -1,7 +1,7 @@
 matrix:
   include:
-    - os: linux
-      compiler: gcc
+    # - os: linux
+    # - compiler: gcc
     - os: osx
       osx_image: xcode7.3
       compiler: clang
@@ -30,8 +30,7 @@ before_install:
 before_script:
   # install libuv >= 1.0.0 (optionally required for building / testing libh2o)
   - curl -L https://github.com/libuv/libuv/archive/v1.0.0.tar.gz | tar xzf -
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then ls -al /usr/lib/; fi
-  - (cd libuv-1.0.0 && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install)
+  - (cd libuv-1.0.0 && ./autogen.sh && ./configure --prefix=/usr/local && make && sudo make install)
   # install perl modules (mandatory for testing)
   - misc/install-perl-module.pl Digest::SHA1
   - misc/install-perl-module.pl Net::EmptyPort
