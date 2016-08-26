@@ -24,9 +24,10 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --yes cmake cmake-data g++-4.8 libstdc++-4.8-dev php5-cgi wget; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
   - echo "$CXX"
-  - $CXX --version
   # for speed, pre-install deps installed in `before_script` section as ubuntu packages
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; sudo apt-get install -qq cpanminus libipc-signal-perl liblist-moreutils-perl libwww-perl libio-socket-ssl-perl zlib1g-dev; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq cpanminus libipc-signal-perl liblist-moreutils-perl libwww-perl libio-socket-ssl-perl zlib1g-dev; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew tap homebrew/versions; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install --quiet cpanminus; fi
 
 before_script:
   # install libuv >= 1.0.0 (optionally required for building / testing libh2o)
@@ -44,9 +45,11 @@ before_script:
   - misc/install-perl-module.pl Path::Tiny
   - misc/install-perl-module.pl Test::Exception
   # install the `ab` command (a.k.a. ApacheBench; optionally required for running some of the tests)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; sudo apt-get install -qq apache2-utils; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq apache2-utils; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install homebrew/apache/ab; fi
   # install nghttp2 with `--enable-app` (optionally required for running HTTP/2 tests)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; sudo apt-get install -qq libev-dev; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq libev-dev; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install libev; fi
   - curl -L https://github.com/tatsuhiro-t/nghttp2/releases/download/v1.4.0/nghttp2-1.4.0.tar.gz | tar xzf -
   - (cd nghttp2-1.4.0 && ./configure --prefix=/usr --disable-threads --enable-app && make && sudo make install)
   - curl -L https://curl.haxx.se/download/curl-7.50.0.tar.gz | tar xzf -
