@@ -77,5 +77,5 @@ before_script:
 script:
   - cmake -DWITH_MRUBY=ON .
   - make all
-  # - make check
-  # - sudo make check-as-root
+  - make check
+  - sudo make check-as-root
