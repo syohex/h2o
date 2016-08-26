@@ -51,7 +51,7 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install libev; fi
 
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl -L https://github.com/tatsuhiro-t/spdylay/releases/download/v1.3.2/spdylay-1.3.2.tar.gz | tar xzf -; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd spdylay-1.3.2. && ./configure --prefix=/usr/local && make && sudo make install); fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd spdylay-1.3.2 && ./configure --prefix=/usr/local && make && sudo make install); fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl http://www.digip.org/jansson/releases/jansson-2.7.tar.gz | tar xzf -; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd jansson-2.7 && ./configure --prefix=/usr/local && make && sudo make install); fi
 
