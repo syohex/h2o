@@ -1,13 +1,14 @@
 matrix:
   include:
     - os: linux
+      compiler:
+        - gcc
     - os: osx
       osx_image: xcode7.3
+      compiler:
+        - clang
 
 language: cpp
-
-compiler:
-  - gcc
 
 addons:
   hosts:
@@ -21,6 +22,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get --yes update; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --yes cmake cmake-data g++-4.8 libstdc++-4.8-dev php5-cgi wget; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
+  - echo $CXX
   - $CXX --version
   # for speed, pre-install deps installed in `before_script` section as ubuntu packages
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; sudo apt-get install -qq cpanminus libipc-signal-perl liblist-moreutils-perl libwww-perl libio-socket-ssl-perl zlib1g-dev; fi
