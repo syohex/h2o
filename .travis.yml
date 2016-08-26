@@ -14,6 +14,9 @@ addons:
     - alternate.127.0.0.1.xip.io
 
 before_install:
+  - echo $LD_LIBRARY_PATH
+  - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+  - echo $LD_LIBRARY_PATH
   - |
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       # upgrade g++ and libstdc++ to build nghttp2
