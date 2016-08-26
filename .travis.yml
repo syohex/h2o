@@ -14,31 +14,25 @@ addons:
     - alternate.127.0.0.1.xip.io
 
 before_install:
-  - echo "$TRAVIS_OS_NAME"
-  - which openssl
-  - openssl version
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl -L https://www.openssl.org/source/openssl-1.0.2h.tar.gz | tar xzf -; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd openssl-1.0.2h && ./Configure darwin64-x86_64-cc --prefix=/usr/local --openssldir=/usr/local/openssl && make && sudo make install); fi
-  - which openssl
-  - openssl version
-
-  # upgrade g++ and libstdc++ to build nghttp2
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-add-repository --yes ppa:smspillaz/cmake-2.8.12; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get --yes update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --yes cmake cmake-data g++-4.8 libstdc++-4.8-dev php5-cgi wget; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
-  - echo "$CXX"
-  # for speed, pre-install deps installed in `before_script` section as ubuntu packages
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq cpanminus libipc-signal-perl liblist-moreutils-perl libwww-perl libio-socket-ssl-perl zlib1g-dev; fi
-  # - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew tap homebrew/versions; fi
-
-
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl -L http://zlib.net/zlib-1.2.8.tar.gz | tar xzf -; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd zlib-1.2.8 && ./configure --prefix=/usr/local && make && sudo make install); fi
-
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install --quiet cpanminus; fi
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      # upgrade g++ and libstdc++ to build nghttp2
+      sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+      sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+      sudo apt-add-repository --yes ppa:smspillaz/cmake-2.8.12
+      sudo apt-get --yes update
+      sudo apt-get install --yes cmake cmake-data g++-4.8 libstdc++-4.8-dev php5-cgi wget
+      if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; fi
+      # for speed, pre-install deps installed in `before_script` section as ubuntu packages
+      sudo apt-get install -qq cpanminus libipc-signal-perl liblist-moreutils-perl libwww-perl libio-socket-ssl-perl zlib1g-dev
+    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      curl -L https://www.openssl.org/source/openssl-1.0.2h.tar.gz | tar xzf -
+      (cd openssl-1.0.2h && ./Configure darwin64-x86_64-cc --prefix=/usr/local --openssldir=/usr/local/openssl && make && sudo make install)
+      curl -L http://zlib.net/zlib-1.2.8.tar.gz | tar xzf -
+      (cd zlib-1.2.8 && ./configure --prefix=/usr/local && make && sudo make install)
+      brew update
+      brew install --quiet cpanminus
+    fi
 
 before_script:
   # install libuv >= 1.0.0 (optionally required for building / testing libh2o)
@@ -55,18 +49,26 @@ before_script:
   - misc/install-perl-module.pl JSON
   - misc/install-perl-module.pl Path::Tiny
   - misc/install-perl-module.pl Test::Exception
+
   # install the `ab` command (a.k.a. ApacheBench; optionally required for running some of the tests)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq apache2-utils; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install homebrew/apache/ab; fi
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      sudo apt-get install -qq apache2-utils
+    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew install homebrew/apache/ab
+    fi
+
   # install nghttp2 with `--enable-app` (optionally required for running HTTP/2 tests)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -qq libev-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then brew install libev; fi
-
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl -L https://github.com/tatsuhiro-t/spdylay/releases/download/v1.3.2/spdylay-1.3.2.tar.gz | tar xzf -; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd spdylay-1.3.2 && ./configure --prefix=/usr/local && make && sudo make install); fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then curl http://www.digip.org/jansson/releases/jansson-2.7.tar.gz | tar xzf -; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then (cd jansson-2.7 && ./configure --prefix=/usr/local && make && sudo make install); fi
-
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      sudo apt-get install -qq libev-dev
+    elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+       brew install libev
+       curl -L https://github.com/tatsuhiro-t/spdylay/releases/download/v1.3.2/spdylay-1.3.2.tar.gz | tar xzf -
+       (cd spdylay-1.3.2 && ./configure --prefix=/usr/local && make && sudo make install)
+       curl http://www.digip.org/jansson/releases/jansson-2.7.tar.gz | tar xzf -
+       (cd jansson-2.7 && ./configure --prefix=/usr/local && make && sudo make install)
+    fi
   - curl -L https://github.com/tatsuhiro-t/nghttp2/releases/download/v1.4.0/nghttp2-1.4.0.tar.gz | tar xzf -
   - (cd nghttp2-1.4.0 && ./configure --prefix=/usr/local --disable-threads --enable-app && make && sudo make install)
   - curl -L https://curl.haxx.se/download/curl-7.50.0.tar.gz | tar xzf -
