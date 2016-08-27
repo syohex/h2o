@@ -8,7 +8,6 @@ plan skip_all => 'curl not found'
     unless prog_exists('curl');
 
 my $tempdir = tempdir(CLEANUP => 1);
-diag "@@@@@ tempdir is: $tempdir";
 
 sub doit {
     my ($cmd, $format, @expected) = @_;
@@ -27,8 +26,6 @@ hosts:
 EOT
 
     $cmd->($server);
-my $lsout = `ls -al $tempdir/access_log && wc -l $tempdir/access_log`;
-diag $lsout;
 
     my @log = do {
         open my $fh, "<", "$tempdir/access_log"
