@@ -7,6 +7,7 @@ matrix:
       compiler: clang
 
 language: cpp
+cache: ccache
 
 addons:
   hosts:
@@ -38,6 +39,9 @@ before_install:
     fi
 
 before_script:
+  - echo $LD_LIBRARY_PATH
+  - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+  - echo $LD_LIBRARY_PATH
   # install libuv >= 1.0.0 (optionally required for building / testing libh2o)
   - curl -L https://github.com/libuv/libuv/archive/v1.0.0.tar.gz | tar xzf -
   - (cd libuv-1.0.0 && ./autogen.sh && ./configure --prefix=/usr/local && make && sudo make install)

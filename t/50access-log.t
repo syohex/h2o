@@ -27,7 +27,7 @@ hosts:
 EOT
 
     $cmd->($server);
-my $lsout = `ls -al $tempdir/access_log && wc -l $tempdir/access_log`
+my $lsout = `ls -al $tempdir/access_log && wc -l $tempdir/access_log`;
 diag $lsout;
 
     my @log = do {
